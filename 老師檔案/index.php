@@ -8,6 +8,11 @@
 <body>
 <h1>物件的宣告</h1>
 <?php
+Interface Behavior{
+    public function run();
+    public function speed();
+    public function jump();
+}
 
 class Animal{
 protected $type='animal';
@@ -49,11 +54,45 @@ echo $cat->run();
 echo $cat->speed();
 //print_r($cat->feet);
 
-$cat->setName('Mary');
+echo $cat->setName('Mary');
 echo $cat->getName();
 
 
+?>
 
+<h1>繼承</h1>
+<?php
+
+class Cat extends Animal implements Behavior{
+    protected $type='cat';
+    protected $name="Judy";
+    function __construct($hair_color){
+        $this->hair_color=$hair_color;
+    }
+
+    function jump(){
+        echo $this->name . " jumpping 2m";
+    }
+
+}
+
+
+
+
+
+$mycat=new Cat('white');
+
+echo $mycat->getName();
+echo "<br>";
+echo $mycat->run();
+echo "<br>";
+echo $mycat->speed();
+echo "<br>";
+$mycat->setName("judy");
+
+echo $mycat->getName();
+echo "<br>";
+echo $mycat->jump();
 
 
 ?>

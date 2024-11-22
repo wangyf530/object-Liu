@@ -16,8 +16,8 @@
         // 通常這些都不會公開
         protected $type = 'animal';
         protected $name = 'John';
-        protected $hair_color = 'black';
-        protected $feet = ['front-left','front-right','back-left','back-right'];
+        public $hair_color = 'black';
+        public $feet = ['front-left','front-right','back-left','back-right'];
         
         // function 前面也可以封裝 不寫的話默認 public
         function __construct($type, $name, $hair_color){
@@ -55,13 +55,15 @@
     // 取用 cat 裡面的type
     // $type 的話 這個是變數會有值 但如果要帶值 會變得很複雜
     // -> 物件 => array
-    echo $cat -> type."<br>";
+
+    // 因為 type 是 protected 所以不能直接用
+    // echo $cat -> type."<br>";
 
     // echo $cat -> name."<br>";
     echo $cat -> getName()."<br>";
     echo $cat -> hair_color."<br>";
     echo $cat -> run()."<br>";
-    print_r($cat -> feet);
+    print_r($cat -> feet)."<br>";
 
     // 直接改
     // $cat -> name = "Joson";
@@ -70,6 +72,69 @@
     // 通過function改名
     $cat -> setName("Mary");
     echo $cat -> getName();
+?>
+
+
+<h1>繼承</h1>
+<?php
+    // extends -> 擴充 aka 繼承
+    // class Cat extends Animal{
+    class Cat extends Animal implements Behavior{
+        // 要繼承的話 同一個變數的類型要一樣 ex. 下面的 $type 是 protected，那上面的 Animal 的 $type 也要是 protected 
+        protected $type = 'cat';
+        protected $name = 'Judy';
+
+        function __construct($hair_color){
+            // name 不需要了，因為上面已經protected Judy了
+            // $this -> name = $name;
+            $this -> hair_color = $hair_color;
+        }
+
+        function jump(){
+            echo $this -> name. " jumps 2m.";
+        }
+    }
+
+    // 可以用來看裡面有哪些方法
+    // 在哪裡都可以
+    Interface Behavior{
+        public function run();
+        public function speed();
+        public function jump();
+    }
+
+    // 確認是否有完成繼承
+    $myCat = new Cat('white');
+    echo $myCat -> getName();
+    echo "<br>";
+    echo $myCat -> run();
+    echo "<br>";
+    echo $myCat -> speed();
+    echo "<br>";
+    $myCat -> setName("Judy");
+    echo $myCat -> getName();
+    echo "<br>";
+    echo $myCat ->jump();
+?>
+
+
+<h1>try dog</h1>
+<?php
+    class Dog extends Animal{
+        // 要繼承的話 同一個變數的類型要一樣 ex. 下面的 $type 是 protected，那上面的 Animal 的 $type 也要是 protected 
+        protected $type = 'dog';
+        
+        function __construct($name, $hair_color){
+            $this -> name = $name;
+            $this -> hair_color = $hair_color;
+        }
+    }
+
+    $dog = new Dog('Bob','brown');
+    echo $dog -> getName();
+    
+
+
 ?>
 </body>
 </html>
