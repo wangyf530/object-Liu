@@ -12,12 +12,12 @@
     // 物件宣告大寫開頭 不是具體單一個體 統稱是概念 like 門(可以有很多種)
     class Animal{
         // 只有 $type 缺少封裝
-        // 用 public / private / const(常數無法在被改變) / protected(要繼承關係才能使用) 進行封裝
+        // 用 public / private (只會在這，繼承不會過去) / const(常數無法在被改變) / protected(要繼承關係才能使用) 進行封裝
         // 通常這些都不會公開
         protected $type = 'animal';
         protected $name = 'John';
         public $hair_color = 'black';
-        public $feet = ['front-left','front-right','back-left','back-right'];
+        private $feet = ['front-left','front-right','back-left','back-right'];
         
         // function 前面也可以封裝 不寫的話默認 public
         function __construct($type, $name, $hair_color){
@@ -63,7 +63,7 @@
     echo $cat -> getName()."<br>";
     echo $cat -> hair_color."<br>";
     echo $cat -> run()."<br>";
-    print_r($cat -> feet)."<br>";
+    // print_r($cat -> feet)."<br>";
 
     // 直接改
     // $cat -> name = "Joson";
@@ -79,6 +79,7 @@
 <?php
     // extends -> 擴充 aka 繼承
     // class Cat extends Animal{
+    // implements 才會去看 Behavior 裡的東西是否都有存在
     class Cat extends Animal implements Behavior{
         // 要繼承的話 同一個變數的類型要一樣 ex. 下面的 $type 是 protected，那上面的 Animal 的 $type 也要是 protected 
         protected $type = 'cat';
@@ -92,6 +93,10 @@
 
         function jump(){
             echo $this -> name. " jumps 2m.";
+        }
+
+        function getFeet(){
+            return $this -> feet;
         }
     }
 
@@ -115,12 +120,15 @@
     echo $myCat -> getName();
     echo "<br>";
     echo $myCat ->jump();
+    echo "<br>";
+    echo $myCat -> getFeet();
+
 ?>
 
 
 <h1>try dog</h1>
 <?php
-    class Dog extends Animal{
+    class Dogg extends Animal{
         // 要繼承的話 同一個變數的類型要一樣 ex. 下面的 $type 是 protected，那上面的 Animal 的 $type 也要是 protected 
         protected $type = 'dog';
         
@@ -130,10 +138,58 @@
         }
     }
 
-    $dog = new Dog('Bob','brown');
+    $dog = new Dogg('Bob','brown');
     echo $dog -> getName();
-    
+?>
 
+
+<h1>靜態宣告</h1>
+<?php
+    class Dog extends Animal implements Behavior{
+        protected $type = 'dog';
+        protected $name = 'Bob';
+
+        static $count = 0;
+        function __construct($hair_color){
+            $this -> hair_color = $hair_color;
+            self::$count++;
+        }
+
+        function bark(){
+            echo $this -> name . " is barking";
+        }
+
+        function getFeet(){
+            return $this -> $feet;
+        }
+
+        function jump(){
+            echo $this -> name . " jumps 1m.";
+        }
+
+        // 不用 new 就能得到 count
+        static function getCount(){
+            return self::$count;
+        }
+
+        // static function getCount(){
+        //     return $this -> count;
+        // }
+    }
+
+    echo Dog::getCount() . "<br>";
+    // echo $dog -> getCount();
+    
+    $dog1 = new Dog('brown');
+    echo $dog1->getName()  . "<br>";
+    $dog2 = new Dog('black');
+    echo $dog2->getName()  . "<br>";
+    $dog3 = new Dog('orange');
+    echo $dog3->getName()  . "<br>";
+    $dog4 = new Dog('white');
+    echo $dog4->getName()  . "<br>";
+    echo Dog::getCount() . "<br>";
+    
 
 ?>
 </body>
